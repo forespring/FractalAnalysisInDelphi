@@ -136,7 +136,7 @@ begin
             if ansiUpperCase(ListBox1.items[j])=currFile
                    then flag:=false;
          end;
-         if flag then ListBox1.Items.add(f2opd1.Files[i]);  //選択されてないファイルならListbox1に追加
+         if flag then ListBox1.Items.add(f2opd1.Files[i]);   //選択されてないファイルならListbox1に追加
       end;
    end;
 
