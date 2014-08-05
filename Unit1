@@ -2,9 +2,9 @@ unit Unit1;
 
 interface
 
-/**********************************************
+/*****************************************************
  *   使用するAPIとクラス群(IDEで自動的に生成される)  *
- **********************************************/
+ *****************************************************/
 
 uses
 Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
@@ -95,7 +95,12 @@ implementation
 uses
 unit3,unit2,unit5;
 
-procedure TForm1.Button1Click(Sender: TObject); //begin Grey-scale
+
+/*********************************************
+*             begin Gray-Scale               *
+**********************************************/
+
+procedure TForm1.Button1Click(Sender: TObject); 
 
 var
 
@@ -103,7 +108,7 @@ pbit1,pbit2:PByteArray;
 X,Y:integer;
 R,G,B,BW:byte;
 
-begin
+begin /*01*/
 
 image2.picture.Bitmap:=image1.Picture.Bitmap;
 
@@ -111,35 +116,37 @@ image1.Picture.Bitmap.PixelFormat:=pf24bit;
 image2.Picture.Bitmap.PixelFormat:=pf24bit;
 
 for y  := 0 to image1.Picture.Bitmap.height - 1 do begin
-for x := 0 to image1.Picture.Bitmap.width- 1 do begin
+  for x := 0 to image1.Picture.Bitmap.width- 1 do begin
 
-pbit1:=image1.Picture.Bitmap.scanline[y];
-pbit2:=image2.Picture.Bitmap.scanline[y];
+   pbit1:=image1.Picture.Bitmap.scanline[y];
+   pbit2:=image2.Picture.Bitmap.scanline[y];
 
-B:=pbit1[x*3];
-G:=pbit1[x*3+1];
-R:=pbit1[x*3+2];
-BW:=byte(round((B+G+R)/3));
+   B:=pbit1[x*3];
+   G:=pbit1[x*3+1];
+   R:=pbit1[x*3+2];
+   BW:=byte(round((B+G+R)/3));
 
-pbit2[x*3]:=BW;
-pbit2[x*3+1]:=BW;
-pbit2[x*3+2]:=BW;
+   pbit2[x*3]:=BW;
+   pbit2[x*3+1]:=BW;
+   pbit2[x*3+2]:=BW;
 
-end;
+  end;
 end;
 
 form3.image5.Picture.Bitmap:=Image2.picture.Bitmap;
 
-end;
+end;/*01*/
+
+
 
 procedure TForm1.Button3Click(Sender: TObject); //getting data
 
 var pbit5,pbit6:pbytearray;
 H,W,x,y,i,j,k,count:integer;
 R,G,B,BW:byte;
+
+
 begin
-
-
 
 j:=strtoint(edit2.text); //max
 k:=strtoint(edit3.Text); //min
@@ -154,103 +161,108 @@ image4.picture.bitmap:=image1.Picture.Bitmap;
 Image1.Picture.Bitmap.pixelformat:=pf24bit;
 Image4.Picture.Bitmap.PixelFormat:=pf24bit;
 
+
 for y := 0 to H do begin
-for x:= 0 to W do begin
+  for x := 0 to W do begin
 
-pbit5:=image1.picture.bitmap.scanline[y];
-pbit6:=image4.picture.bitmap.scanline[y];
+    pbit5:=image1.picture.bitmap.scanline[y];
+    pbit6:=image4.picture.bitmap.scanline[y];
 
-case i of
+    case i of
 
-0: begin
-R:=pbit5[3*x+2];
+    0: begin
+        R:=pbit5[3*x+2];
 
-if (k<=R) and (R<=j) then begin
+        if (k<=R) and (R<=j) then begin
 
-pbit6[3*x+2]:=255;
-pbit6[3*x+1]:=0;
-pbit6[3*x]:=0
+        pbit6[3*x+2]:=255;
+        pbit6[3*x+1]:=0;
+        pbit6[3*x]:=0
+        end
+        else begin
 
-end
-else begin
+        pbit6[3*x+2]:=0;
+        pbit6[3*x+1]:=0;
+        pbit6[3*x]:=0;
+       end;
+    end;
 
-pbit6[3*x+2]:=0;
-pbit6[3*x+1]:=0;
-pbit6[3*x]:=0;
+    1: begin
+        G:=pbit5[3*x+1];
 
-end;
-end;
+        if (k<=G) and (G<=j) then begin
 
-1: begin
-   G:=pbit5[3*x+1];
+        pbit6[3*x+2]:=0;
+        pbit6[3*x+1]:=255;
+        pbit6[3*x]:=0
+        end
+        else begin
 
-if (k<=G) and (G<=j) then begin
+        pbit6[3*x+2]:=0;
+        pbit6[3*x+1]:=0;
+        pbit6[3*x]:=0;
+       end;
+     end;
 
-pbit6[3*x+2]:=0;
-pbit6[3*x+1]:=255;
-pbit6[3*x]:=0
+    2: begin
+        B:=pbit5[3*x];
 
-end
-else begin
+        if (k<=B) and (B<=j) then begin
 
-pbit6[3*x+2]:=0;
-pbit6[3*x+1]:=0;
-pbit6[3*x]:=0;
-end;
-end;
+        pbit6[3*x+2]:=0;
+        pbit6[3*x+1]:=0;
+        pbit6[3*x]:=255
+        end
+        else begin
 
-2: begin
-B:=pbit5[3*x];
+        pbit6[3*x+2]:=0;
+        pbit6[3*x+1]:=0;
+        pbit6[3*x]:=0;
+       end;
+    end;
 
-if (k<=B) and (B<=j) then begin
+    3: begin
 
-pbit6[3*x+2]:=0;
-pbit6[3*x+1]:=0;
-pbit6[3*x]:=255
+        R:=pbit5[3*x+2];
+        G:=pbit5[3*x+1];
+        B:=pbit5[3*x];
+        BW:=round((R+G+B)/3);
 
-end
-else begin
+        if (k<=BW) and (BW<=j) then begin  //輝度値ｋ〜ｊのものは白になる。
 
-pbit6[3*x+2]:=0;
-pbit6[3*x+1]:=0;
-pbit6[3*x]:=0;
-end;
-end;
+        //white
+        pbit6[3*x+2]:=255;     
+        pbit6[3*x+1]:=255;
+        pbit6[3*x]:=255;
+        end
+        else begin
 
-3: begin
+        //black
+        pbit6[3*x+2]:=0;     
+        pbit6[3*x+1]:=0;
+        pbit6[3*x]:=0;
+       end;
+    end;
 
-R:=pbit5[3*x+2];
-G:=pbit5[3*x+1];
-B:=pbit5[3*x];
-BW:=round((R+G+B)/3);
-
-if (k<=BW) and (BW<=j) then begin  //輝度値ｋ〜ｊのものは白になる。
-
-pbit6[3*x+2]:=255;     //white
-pbit6[3*x+1]:=255;
-pbit6[3*x]:=255;
-
-end
-else begin
-
-pbit6[3*x+2]:=0;     //black
-pbit6[3*x+1]:=0;
-pbit6[3*x]:=0;
-end;
-end;
-
-
+  end; //for x
+end;   //for y
 
 end;
-end;
-end;
+
+
 
 form3.image5.Picture.Bitmap:=Image4.picture.Bitmap;
 
 
 end;
 
-procedure TForm1.Button4Click(Sender: TObject); // begin binarization
+
+
+/*********************************************
+*             begin binarization             *
+**********************************************/
+
+procedure TForm1.Button4Click(Sender: TObject); 
 
 var
 pbit3,pbit4:pbytearray;
@@ -267,42 +279,46 @@ Image1.Picture.Bitmap.pixelformat:=pf24bit;
 Image3.picture.Bitmap.pixelformat:=pf24bit;
 
 for y := 0 to Image1.Picture.bitmap.Height - 1 do begin
-for x:= 0 to Image1.Picture.Bitmap.Width - 1 do begin
+    for x:= 0 to Image1.Picture.Bitmap.Width - 1 do begin
 
-pbit3:=image1.picture.bitmap.scanline[y];
-pbit4:=image3.picture.bitmap.scanLine[y];
+    pbit3:=image1.picture.bitmap.scanline[y];
+    pbit4:=image3.picture.bitmap.scanLine[y];
 
-B:=pbit3[x*3];
-G:=pbit3[x*3+1];
-R:=pbit3[x*3+2];
+    B:=pbit3[x*3];
+    G:=pbit3[x*3+1];
+    R:=pbit3[x*3+2];
 
-c:=byte(round((R+G+B)/3));
-e:=byte(strtoint(edit1.text));
+    c:=byte(round((R+G+B)/3));
+    e:=byte(strtoint(edit1.text));
 
-if c > e then begin
+    if c > e then begin
 
-pbit4[3*x]:=255;
-pbit4[3*x+1]:=255;
-pbit4[3*x+2]:=255;
+        pbit4[3*x]:=255;
+        pbit4[3*x+1]:=255;
+        pbit4[3*x+2]:=255;
     
-end
-else begin
+    end
+    else begin
     
-pbit4[3*x]:=0;
-pbit4[3*x+1]:=0;
-pbit4[3*x+2]:=0;
+        pbit4[3*x]:=0;
+        pbit4[3*x+1]:=0;
+        pbit4[3*x+2]:=0;
 
-end;
+    end;
 
-end;
-end;
+    end; //for x
+end;     //for y
+
 
 form3.image5.Picture.Bitmap:=Image3.picture.Bitmap;
 
-
 end;
  
- // close処理
+ 
+/*********************************************************** 
+*        GUIの設定。Delphi IDEでのみ確認できます           *
+************************************************************/
+
 
 procedure TForm1.close1Click(Sender: TObject);
 begin
@@ -392,7 +408,11 @@ form3.Visible:=true;
 
 end;
 
-//ドラッグandドロップ処理 
+/*********************************************
+*            ドラッグandドロップ処理         *
+**********************************************/
+
+
 procedure TForm1.WMDropFiles(var Msg: TWMDropFiles);
 var
 FileName: array[0..260] of Char;
