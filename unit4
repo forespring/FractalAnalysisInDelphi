@@ -1,0 +1,438 @@
+
+/*****************************************
+ *             グラフ描画処理              *
+ *****************************************/
+
+unit Unit4;
+
+interface
+
+uses
+  Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
+  Dialogs, unit1, unit2, unit3, ExtDlgs, StdCtrls, ExtCtrls,  math;
+
+type
+  TForm4 = class(TForm)
+    Image7: TImage;
+    Image8: TImage;
+    Label1: TLabel;
+    Label2: TLabel;
+    Label3: TLabel;
+    Label4: TLabel;
+    Label5: TLabel;
+    Label6: TLabel;
+    Label7: TLabel;
+    Label8: TLabel;
+    Label9: TLabel;
+    Label10: TLabel;
+    Label11: TLabel;
+    Label12: TLabel;
+    Label13: TLabel;
+    Label14: TLabel;
+    Label15: TLabel;
+    Label17: TLabel;
+    Label18: TLabel;
+    Label19: TLabel;
+    Label20: TLabel;
+    Label21: TLabel;
+    Label16: TLabel;
+    Label22: TLabel;
+    Label23: TLabel;
+    Label24: TLabel;
+    Label25: TLabel;
+    Label26: TLabel;
+    Label27: TLabel;
+    Label28: TLabel;
+    Label29: TLabel;
+    Label30: TLabel;
+    Label31: TLabel;
+    Label32: TLabel;
+    Label33: TLabel;
+    Label34: TLabel;
+    Label35: TLabel;
+    Label36: TLabel;
+    Label37: TLabel;
+    Label38: TLabel;
+    Label39: TLabel;
+    Label40: TLabel;
+    Button1: TButton;
+    spd10: TSavePictureDialog;
+    Label41: TLabel;
+    Label42: TLabel;
+    Label43: TLabel;
+    Label44: TLabel;
+    Label45: TLabel;
+    Label46: TLabel;
+    Label47: TLabel;
+    Label48: TLabel;
+    Label49: TLabel;
+    Label50: TLabel;
+    Label51: TLabel;
+    Label52: TLabel;
+    Label53: TLabel;
+    Label54: TLabel;
+    Label55: TLabel;
+    Label56: TLabel;
+    Label57: TLabel;
+    Label58: TLabel;
+    Label59: TLabel;
+    Label60: TLabel;
+    procedure FormCreate(Sender: TObject);
+    procedure FormClose(Sender: TObject; var Action: TCloseAction);
+    procedure Button1Click(Sender: TObject);
+  private
+    { Private 宣言 }
+
+
+  public
+    { Public 宣言 }
+  end;
+
+var
+  Form4: TForm4;
+
+
+implementation
+
+{$R *.dfm}
+
+procedure TForm4.Button1Click(Sender: TObject);
+begin
+
+if spd10.execute then begin
+form4.Image7.Picture.SaveToFile(spd10.filename);
+form4.Image8.Picture.SaveToFile(spd10.filename);
+
+end;
+end;
+
+procedure TForm4.FormClose(Sender: TObject; var Action: TCloseAction);
+begin
+ {image1.Canvas.Pen.Color:=clwhite;      //グラフの初期化
+ image1.Canvas.Brush.Color:=clwhite;
+ image1.canvas.rectangle(0,0,205,205);
+
+ image2.Canvas.Pen.Color:=clwhite;
+ image2.Canvas.Brush.Color:=clwhite;
+ image2.canvas.rectangle(0,0,205,205);  }
+end;
+
+procedure TForm4.FormCreate(Sender: TObject);
+
+var
+a,v,w,x,y,r,number,ifn:integer;
+xy,xs2,x2s,D,I,xs,ys,Dk,Ik,xyk,xs2k,x2sk,xsk,ysk:real;
+l,m,n,o,p,q:array[1..9] of double;
+//st:string;
+bmp:TBitmap;
+
+begin
+
+  form4.Image7.canvas.pen.color:=clblack;
+  form4.Image8.canvas.pen.color:=clblack;
+  form4.image7.canvas.rectangle(0,0,301,301);
+  form4.image8.canvas.rectangle(0,0,301,301);
+
+
+  number:=0;
+
+  for w := 0 to 15 do begin
+   for v := 1 to 9 do begin
+
+
+
+   if count[v,w]= 0 then begin      //if2.begin
+
+     l[v]:=0;
+     m[v]:=0;
+     n[v]:=0;
+     o[v]:=0;                             //座標の値
+     p[v]:=0;
+     q[v]:=0;
+
+     x:=round(45*(v-1)*ln(2));
+     y:=300;
+
+
+
+                         //不正な浮動小数点エラーの回避
+   // y:=200;
+    end
+     else begin
+
+   x:=round(45*(v-1)*ln(2));         //x座標（ｖ−１は座標をかくため）
+   y:=300-(round(15*ln(count[v,w]))); //ｙ座標が下向き正なことによる。
+
+   number:=number+1;           //有効な数値を数える。
+
+   l[v]:=v*ln(2);
+   m[v]:=ln(count[v,w]);
+   n[v]:=ln(count[v,w])*v*ln(2);
+
+   o[v]:=x;                             //座標の値
+   p[v]:=y;
+   q[v]:=x*y;
+
+    end;                            //if2.end
+
+ {  if count[v,w]=0 then begin      //if1.begin
+
+    end
+    else begin
+
+
+
+    end;                   }    //if1.end
+
+
+   with image7.Canvas do begin   //1
+
+   case w of                     //2
+
+   0:begin  pen.Color:=clblack;
+            moveto(x-2,y-2);
+            lineTo(x+3,y+3);
+            MoveTo(x+2,y-2);
+            LineTo(x-3,y+3);
+   end;
+   1:begin  pen.Color:=clyellow;
+            rectangle(x-2,y-2,x+2,y+2);
+   end;
+   2:begin  pen.Color:=clgreen;
+            brush.style:=bssolid;
+            rectangle(x-2,y-2,x+2,y+2);
+   end;
+   3:begin  pen.Color:=clnavy;
+            ellipse(x-2,y-2,x+2,y+2);
+   end;
+   4:begin
+            pen.Color:=clred;
+            moveto(x-2,y-2);
+            lineTo(x+3,y+3);
+            MoveTo(x+2,y-2);
+            LineTo(x-3,y+3);
+   end;
+   5:begin  pen.Color:=clFuchsia;
+            rectangle(x-2,y-2,x+2,y+2);
+   end;
+   6:begin  pen.Color:=clblue;
+            brush.style:=bssolid;
+            rectangle(x-2,y-2,x+2,y+2);
+   end;
+   7:begin  pen.Color:=claqua;
+            ellipse(x-2,y-2,x+2,y+2);
+   end;
+
+   end;                                  //2
+   end;                                 //1
+
+   with image8.canvas do begin         //1
+
+   case w of                            //2
+
+   8:begin  pen.Color:=clblack;
+            moveto(x-2,y-2);
+            lineTo(x+3,y+3);
+            MoveTo(x+2,y-2);
+            LineTo(x-2,y+3);
+   end;
+   9:begin  pen.Color:=clyellow;
+            rectangle(x-2,y-2,x+2,y+2);
+   end;
+   10:begin  pen.Color:=clgreen;
+             brush.Style:=bssolid;
+             rectangle(x-2,y-2,x+2,y+2);
+   end;
+   11:begin  pen.Color:=clnavy;
+            ellipse(x-2,y-2,x+2,y+2);
+   end;
+   12:begin
+            pen.Color:=clred;
+            moveto(x-2,y-2);
+            lineTo(x+3,y+3);
+            MoveTo(x+2,y-2);
+            LineTo(x-3,y+3);
+   end;
+   13:begin  pen.Color:=clFuchsia;
+            rectangle(x-2,y-2,x+2,y+2);
+   end;
+   14:begin  pen.Color:=clblue;
+            brush.style:=bssolid;
+            rectangle(x-2,y-2,x+2,y+2);
+   end;
+   15:begin  pen.Color:=claqua;
+            ellipse(x-2,y-2,x+2,y+2);
+   end;
+
+
+   end;                                 //2
+   end;                                 //1
+
+ ;
+
+ // end;    //if2.end
+
+
+
+  end;                          //forv
+
+
+
+    a:=number;          //有効な数値の数
+
+    xs:=sum(l);
+    ys:=sum(m);
+    xy:=sum(n);
+    xs2:=sqr(xs);
+    x2s:=sumofsquares(l);
+
+if a*x2s-xs2 = 0 then begin  //if3.begin
+
+   //   D:=0;
+    //  I:=0;
+
+     Tlabel(Findcomponent('label'+Inttostr(w+25))).caption:='No Answer';
+
+
+     end
+     else begin
+
+
+     I:=(x2s*ys-xy*xs)/(a*x2s-xs2);
+     D:=(a*xy-xs*ys)/(a*x2s-xs2);
+     Tlabel(Findcomponent('label'+Inttostr(w+25)))
+     .caption:=format('%8.4f',[D]);
+     Tlabel(findcomponent('label'+inttostr(w+45)))
+     .caption:=format('%8.4f',[I]);
+
+   end;                          //if3.end
+
+   xsk:=sum(o);               // 座標の値
+   ysk:=sum(p);
+   xyk:=sum(q);
+   xs2k:=sqr(xsk);
+   x2sk:=sumofsquares(o);
+
+ If (a*x2sk-xs2k) <> 0 {and ((a*x2s-xs2) <> 0)} then begin         //3
+
+// Dk:=0;
+// Ik:=0;
+// end
+// else begin
+ Ik:=(x2sk*ysk-xyk*xsk)/(a*x2sk-xs2k);
+ Dk:=(a*xyk-xsk*ysk)/(a*x2sk-xs2k);
+
+ //  end;                                  //3
+
+ number:=0;                  //有効数値のinitialization.
+
+ 
+
+
+   with image7.Canvas do begin   //1
+
+   case w of                     //2
+
+   0:begin  pen.Color:=clblack;
+            moveto(0,round(Ik)) ;
+            lineTo(300,round(Dk*300+Ik)) ;
+   end;
+   1:begin  pen.Color:=clyellow;
+            moveto(0,round(Ik)) ;
+            lineTo(300,round(Dk*300+Ik)) ;
+   end;
+   2:begin  pen.Color:=clgreen;
+            moveto(0,round(Ik)) ;
+            lineTo(300,round(Dk*300+Ik)) ;
+   end;
+   3:begin  pen.Color:=clnavy;
+            moveto(0,round(Ik)) ;
+            lineTo(300,round(Dk*300+Ik)) ;
+   end;
+   4:begin
+            pen.Color:=clred;
+            moveto(0,round(Ik)) ;
+            lineTo(300,round(Dk*300+Ik)) ;
+   end;
+   5:begin  pen.Color:=clFuchsia;
+            moveto(0,round(Ik)) ;
+            lineTo(300,round(Dk*300+Ik)) ;
+   end;
+   6:begin  pen.Color:=clblue;
+            moveto(0,round(Ik)) ;
+            lineTo(300,round(Dk*300+Ik)) ;
+   end;
+   7:begin  pen.Color:=claqua;
+            moveto(0,round(Ik)) ;
+            lineTo(300,round(Dk*300+Ik)) ;
+   end;
+   end;                              //2
+
+
+   end;                                 //1
+
+
+
+   with image8.canvas do begin         //1
+
+   case w of                            //2
+
+   8:begin  pen.Color:=clblack;
+            moveto(0,round(Ik)) ;
+            lineTo(300,round(Dk*300+Ik)) ;
+   end;
+   9:begin  pen.Color:=clyellow;
+            moveto(0,round(Ik)) ;
+            lineTo(300,round(Dk*300+Ik)) ;
+   end;
+   10:begin  pen.Color:=clgreen;
+             moveto(0,round(Ik)) ;
+            lineTo(300,round(Dk*300+Ik)) ;
+   end;
+   11:begin  pen.Color:=clnavy;
+             moveto(0,round(Ik)) ;
+            lineTo(300,round(Dk*300+Ik)) ;
+   end;
+   12:begin
+            pen.Color:=clred;
+            moveto(0,round(Ik)) ;
+            lineTo(300,round(Dk*300+Ik)) ;
+   end;
+   13:begin  pen.Color:=clFuchsia;
+             moveto(0,round(Ik)) ;
+            lineTo(300,round(Dk*300+Ik)) ;
+   end;
+   14:begin  pen.Color:=clblue;
+             moveto(0,round(Ik)) ;
+            lineTo(300,round(Dk*300+Ik)) ;
+   end;
+   15:begin  pen.Color:=claqua;
+             moveto(0,round(Ik)) ;
+            lineTo(300,round(Dk*300+Ik)) ;
+
+   end;
+     end;                                 //2
+
+
+        end;                           //1
+
+ end;//3
+        end;                      //forw
+
+
+   If form3.Visible=false then
+
+   begin
+
+
+ // form4.spd10.FileName:='image'+st;
+  form4.GetFormImage.Savetofile('image'+st+'.bmp');
+
+
+
+  end;
+   end;
+
+ // end;
+
+end.
