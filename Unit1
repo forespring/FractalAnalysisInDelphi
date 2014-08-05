@@ -1,0 +1,426 @@
+unit Unit1;
+
+interface
+
+/**********************************************
+ *   使用するAPIとクラス群(IDEで自動的に生成される)  *
+ **********************************************/
+
+uses
+Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
+Dialogs, JPEG, ShellAPI, StdCtrls, DBCtrls, ExtDlgs, ExtCtrls, ActnMan, ActnColorMaps,
+CustomizeDlg, Menus ;
+
+type
+TForm1 = class(TForm)
+
+Button1: TButton;
+Image1: TImage;
+dlgopen: TOpenPictureDialog;
+MainMenu1: TMainMenu;
+N1: TMenuItem;
+open1: TMenuItem;
+save1: TMenuItem;
+close1: TMenuItem;
+Image2: TImage;
+Image3: TImage;
+Image4: TImage;
+Button2: TButton;
+Button3: TButton;
+Button4: TButton;
+Edit1: TEdit;
+Label2: TLabel;
+spd1: TSavePictureDialog;
+spd2: TSavePictureDialog;
+saveg1: TMenuItem;
+ScB1: TScrollBar;
+RDG1: TRadioGroup;
+SCB2: TScrollBar;
+SCB3: TScrollBar;
+Label1: TLabel;
+Label3: TLabel;
+Edit2: TEdit;
+Edit3: TEdit;
+spd3: TSavePictureDialog;
+saveimage41: TMenuItem;
+N2: TMenuItem;
+Openwindow21: TMenuItem;
+window31: TMenuItem;
+N3: TMenuItem;
+N4: TMenuItem;
+N5: TMenuItem;
+procedure close1Click(Sender: TObject);
+{procedure Image1DragOver(Sender, Source: TObject; X, Y: Integer;
+    State: TDragState; var Accept: Boolean); }
+
+procedure open1Click(Sender: TObject);
+
+procedure Button1Click(Sender: TObject);
+procedure FormCreate(Sender: TObject);
+procedure Button4Click(Sender: TObject);
+procedure save1Click(Sender: TObject);
+procedure saveg1Click(Sender: TObject);
+procedure ScB1Change(Sender: TObject);
+procedure Button3Click(Sender: TObject);
+procedure SCB2Change(Sender: TObject);
+procedure SCB3Change(Sender: TObject);
+procedure saveimage41Click(Sender: TObject);
+procedure N4Click(Sender: TObject);
+procedure window31Click(Sender: TObject);
+procedure Openwindow21Click(Sender: TObject);
+procedure N5Click(Sender: TObject);
+{procedure Button3Click(Sender: TObject);}
+
+
+/******************************************
+ *       各proceudreの処理内容の記述         * 
+ ******************************************/
+
+private
+
+procedure WMDropFiles(var msg:TWMDropFiles);
+message WM_DropFiles;
+{ Private 宣言 }
+public
+{ Public 宣言 }
+//Image1: TImage;
+end;
+
+var
+Form1: TForm1;
+
+implementation
+
+{$R *.dfm}
+uses
+unit3,unit2,unit5;
+
+procedure TForm1.Button1Click(Sender: TObject); //begin Grey-scale
+
+var
+
+pbit1,pbit2:PByteArray;
+X,Y:integer;
+R,G,B,BW:byte;
+
+begin
+
+image2.picture.Bitmap:=image1.Picture.Bitmap;
+
+image1.Picture.Bitmap.PixelFormat:=pf24bit;
+image2.Picture.Bitmap.PixelFormat:=pf24bit;
+
+for y  := 0 to image1.Picture.Bitmap.height - 1 do begin
+for x := 0 to image1.Picture.Bitmap.width- 1 do begin
+
+pbit1:=image1.Picture.Bitmap.scanline[y];
+pbit2:=image2.Picture.Bitmap.scanline[y];
+
+B:=pbit1[x*3];
+G:=pbit1[x*3+1];
+R:=pbit1[x*3+2];
+BW:=byte(round((B+G+R)/3));
+
+pbit2[x*3]:=BW;
+pbit2[x*3+1]:=BW;
+pbit2[x*3+2]:=BW;
+
+end;
+end;
+
+form3.image5.Picture.Bitmap:=Image2.picture.Bitmap;
+
+end;
+
+procedure TForm1.Button3Click(Sender: TObject); //getting data
+
+var pbit5,pbit6:pbytearray;
+H,W,x,y,i,j,k,count:integer;
+R,G,B,BW:byte;
+begin
+
+
+
+j:=strtoint(edit2.text); //max
+k:=strtoint(edit3.Text); //min
+H:=Image1.Picture.Bitmap.height - 1;
+W:=Image1.Picture.Bitmap.Width - 1;
+
+
+i:=RDG1.ItemIndex;
+
+image4.picture.bitmap:=image1.Picture.Bitmap;
+
+Image1.Picture.Bitmap.pixelformat:=pf24bit;
+Image4.Picture.Bitmap.PixelFormat:=pf24bit;
+
+for y := 0 to H do begin
+for x:= 0 to W do begin
+
+pbit5:=image1.picture.bitmap.scanline[y];
+pbit6:=image4.picture.bitmap.scanline[y];
+
+case i of
+
+0: begin
+R:=pbit5[3*x+2];
+
+if (k<=R) and (R<=j) then begin
+
+pbit6[3*x+2]:=255;
+pbit6[3*x+1]:=0;
+pbit6[3*x]:=0
+
+end
+else begin
+
+pbit6[3*x+2]:=0;
+pbit6[3*x+1]:=0;
+pbit6[3*x]:=0;
+
+end;
+end;
+
+1: begin
+   G:=pbit5[3*x+1];
+
+if (k<=G) and (G<=j) then begin
+
+pbit6[3*x+2]:=0;
+pbit6[3*x+1]:=255;
+pbit6[3*x]:=0
+
+end
+else begin
+
+pbit6[3*x+2]:=0;
+pbit6[3*x+1]:=0;
+pbit6[3*x]:=0;
+end;
+end;
+
+2: begin
+B:=pbit5[3*x];
+
+if (k<=B) and (B<=j) then begin
+
+pbit6[3*x+2]:=0;
+pbit6[3*x+1]:=0;
+pbit6[3*x]:=255
+
+end
+else begin
+
+pbit6[3*x+2]:=0;
+pbit6[3*x+1]:=0;
+pbit6[3*x]:=0;
+end;
+end;
+
+3: begin
+
+R:=pbit5[3*x+2];
+G:=pbit5[3*x+1];
+B:=pbit5[3*x];
+BW:=round((R+G+B)/3);
+
+if (k<=BW) and (BW<=j) then begin  //輝度値ｋ〜ｊのものは白になる。
+
+pbit6[3*x+2]:=255;     //white
+pbit6[3*x+1]:=255;
+pbit6[3*x]:=255;
+
+end
+else begin
+
+pbit6[3*x+2]:=0;     //black
+pbit6[3*x+1]:=0;
+pbit6[3*x]:=0;
+end;
+end;
+
+
+
+end;
+end;
+end;
+
+form3.image5.Picture.Bitmap:=Image4.picture.Bitmap;
+
+
+end;
+
+procedure TForm1.Button4Click(Sender: TObject); // begin binarization
+
+var
+pbit3,pbit4:pbytearray;
+R,G,B,c,e:byte;
+x,y:integer;
+
+begin
+
+
+
+image3.picture.bitmap:=image1.Picture.Bitmap;
+
+Image1.Picture.Bitmap.pixelformat:=pf24bit;
+Image3.picture.Bitmap.pixelformat:=pf24bit;
+
+for y := 0 to Image1.Picture.bitmap.Height - 1 do begin
+for x:= 0 to Image1.Picture.Bitmap.Width - 1 do begin
+
+pbit3:=image1.picture.bitmap.scanline[y];
+pbit4:=image3.picture.bitmap.scanLine[y];
+
+B:=pbit3[x*3];
+G:=pbit3[x*3+1];
+R:=pbit3[x*3+2];
+
+c:=byte(round((R+G+B)/3));
+e:=byte(strtoint(edit1.text));
+
+if c > e then begin
+
+pbit4[3*x]:=255;
+pbit4[3*x+1]:=255;
+pbit4[3*x+2]:=255;
+    
+end
+else begin
+    
+pbit4[3*x]:=0;
+pbit4[3*x+1]:=0;
+pbit4[3*x+2]:=0;
+
+end;
+
+end;
+end;
+
+form3.image5.Picture.Bitmap:=Image3.picture.Bitmap;
+
+
+end;
+ 
+ // close処理
+
+procedure TForm1.close1Click(Sender: TObject);
+begin
+ close;   
+end;
+
+
+procedure TForm1.FormCreate(Sender: TObject);
+begin
+ DragAcceptFiles(Handle, True);    
+end;
+
+procedure TForm1.N4Click(Sender: TObject);
+begin
+form2.show;
+end;
+
+procedure TForm1.N5Click(Sender: TObject);
+begin
+form5:=Tform5.create(self);
+form5.visible:=true;
+end;
+
+{procedure TForm1.Image1DragOver(Sender, Source: TObject; X, Y: Integer;
+    State: TDragState; var Accept: Boolean);
+    
+    begin
+    accept:=true;
+    end;}
+
+
+procedure TForm1.open1Click(Sender: TObject);
+begin
+
+If dlgopen.execute
+then begin
+image1.picture.LoadFromFile(Form1.dlgopen.FileName);
+
+end;
+end;
+
+procedure TForm1.Openwindow21Click(Sender: TObject);
+begin
+form2.Show;
+end;
+
+procedure TForm1.save1Click(Sender: TObject); //save binarization
+begin
+if spd1.execute then
+image3.picture.savetofile(spd1.FileName);
+
+end;
+
+procedure TForm1.saveg1Click(Sender: TObject); //save grey-scale
+begin
+if spd2.Execute then
+image2.Picture.savetofile(spd2.FileName);
+
+end;
+
+procedure TForm1.saveimage41Click(Sender: TObject); //save image4
+begin
+if Spd3.execute then
+image4.Picture.savetofile(spd3.FileName);
+end;
+
+procedure TForm1.ScB1Change(Sender: TObject);//scroll bar setting
+begin
+
+edit1.Text:=inttostr(Scb1.position);
+end;
+
+procedure TForm1.SCB2Change(Sender: TObject);
+begin
+edit2.Text:=inttostr(scb2.Position);
+end;
+
+procedure TForm1.SCB3Change(Sender: TObject);
+begin
+edit3.Text:=inttostr(scb3.Position);
+end;
+
+procedure TForm1.window31Click(Sender: TObject);
+begin
+form3:=Tform3.create(self);
+form3.Visible:=true;
+
+end;
+
+//ドラッグandドロップ処理 
+procedure TForm1.WMDropFiles(var Msg: TWMDropFiles);
+var
+FileName: array[0..260] of Char;
+i, n: Integer;
+e:string;
+BMP:Tbitmap;
+JP:TJpegimage;
+begin
+
+// ドロップされたファイル数を得る
+n := DragQueryFile(Msg.Drop, $ffffffff, nil, SizeOf(FileName));
+
+// ファイル名をMemo1に追加
+for i := 0 to n do
+begin
+DragQueryFile(Msg.Drop, i, FileName, SizeOf(FileName));
+
+
+
+image1.picture.LoadFromFile(filename);
+
+end;
+// ドロップの終了
+
+DragFinish(Msg.Drop);
+
+end;
+
+
+
+end.
