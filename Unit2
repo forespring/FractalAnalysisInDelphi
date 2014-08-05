@@ -1,0 +1,148 @@
+unit Unit2;
+
+interface
+
+uses
+  Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
+  Dialogs, unit1, unit3, ExtDlgs, StdCtrls, ExtCtrls,math;
+
+type
+  TForm2 = class(TForm)
+    f2opd1: TOpenPictureDialog;
+    ListBox1: TListBox;
+    Button1: TButton;
+    Button2: TButton;
+    Image1: TImage;
+    procedure Button2Click(Sender: TObject);
+    procedure Button1Click(Sender: TObject);
+  private
+    { Private 宣言 }
+  public
+    { Public 宣言 }
+
+  end;
+
+ var
+    
+
+    ifn:integer;
+     st:string;
+
+    Form2: TForm2;
+ 
+
+implementation
+
+{$R *.dfm}
+uses
+
+unit4;
+
+procedure TForm2.Button1Click(Sender: TObject);
+
+var H,c:extended;
+    pbit1:PByteArray;
+    a,X,Y,z,n,U,D:integer;
+    R,G,B,BW:byte;
+    
+
+begin
+
+  ifn:=0;
+   
+  for a := 0 to  ListBox1.items.Count- 1 do
+
+  begin
+    image1.Picture.loadfromfile(form2.f2opd1.Files[a]);
+
+   st:=inttostr(ifn);
+   ifn:=ifn+1;
+
+   image1.Picture.Bitmap.PixelFormat:=pf24bit;
+
+   H:=image1.Picture.Bitmap.Height;
+
+
+
+
+/*********************************************
+ *             フラクタル解析部分               *
+ *********************************************/
+
+for n := 0 to 15 do begin    // 色度数０〜２５５まで
+
+ //n:=10;
+
+ for z:= 1 to 9 do begin      //サイズ（４〜５１２）まで
+
+ count[z,n]:=0;
+
+//左が底で右が乗数。横と縦が2^(z-1)ピクセルの
+ c:=Intpower(2,z-1);
+
+//中心ピクセルからの上限。
+ U:=Floor((H/2-1)-(c-1));
+
+//中心ピクセルからの下限。
+ D:=Floor(H/2+(c-1));
+
+//for文で画像のx軸とy軸の値にアクセス
+    for y := U to D do begin
+      for x := U to D do begin
+
+
+
+      pbit1:=image1.Picture.Bitmap.scanline[y];
+
+      B:=pbit1[3*x];
+      G:=pbit1[3*x+1];
+      R:=pbit1[3*x+2];
+      BW:=round((R+G+B)/3);　//グレイスケール
+
+      if (16*n<=BW) and (BW<16*(n+1)) then
+
+       count[z,n]:=count[z,n]+1;        //X
+
+
+     end;
+     end;
+
+     end;
+
+
+     end;
+    form4:=TForm4.create(self);
+   form4.Visible:=true;
+  end;
+
+end;
+
+
+//ファイル選択
+
+procedure TForm2.Button2Click(Sender: TObject);
+var
+   i,j:integer;
+   flag:boolean;
+   currFile:string;
+begin
+   f2opd1.Options:=f2opd1.Options+[ofAllowMultiSelect];//f2opd1のプロパティのoptionをmultiに変更
+   If f2opd1.Execute then
+   begin
+      for i:=0 to f2opd1.Files.Count-1 do
+      begin//重複をさせないように
+         currFile:=AnsiUpperCase(f2opd1.Files[i]);
+         flag:=True;                              //Flagというbooleanを使って，すでに選択されたファイルかどうかを認識
+         for j:=0 to ListBox1.items.Count-1 do
+         begin
+            if ansiUpperCase(ListBox1.items[j])=currFile
+                   then flag:=false;
+         end;
+         if flag then ListBox1.Items.add(f2opd1.Files[i]);  //選択されてないファイルならListbox1に追加
+      end;
+   end;
+
+
+end;
+
+end.s
