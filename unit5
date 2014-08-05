@@ -1,0 +1,151 @@
+
+/****************************
+ *    画像重心の検出と記録     *
+ ****************************/
+
+unit Unit5;
+
+interface
+
+uses
+  Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
+  Dialogs,math,ExtDlgs, StdCtrls, ExtCtrls;
+
+type
+  TForm5 = class(TForm)
+    ListBox1: TListBox;
+    Button1: TButton;
+    f5opd1: TOpenPictureDialog;
+    Button2: TButton;
+    Image1: TImage;
+    procedure Button1Click(Sender: TObject);
+    procedure Button2Click(Sender: TObject);
+  private
+    { Private 宣言 }
+  public
+    { Public 宣言 }
+    
+
+
+  end;
+
+var
+
+    Form5: TForm5;
+    FileN:textfile;
+    Gx,Gy:real;
+    a,count:integer;
+implementation
+
+{$R *.dfm}
+uses
+
+unit6;
+
+procedure TForm5.Button1Click(Sender: TObject);
+
+var
+   i,j:integer;
+   flag:boolean;
+   currFile:string;
+
+begin
+   f5opd1.Options:=f5opd1.Options+[ofAllowMultiSelect];
+   If f5opd1.Execute then
+   begin
+      for i:=0 to f5opd1.Files.Count-1 do
+      begin//重複をさせないように
+         currFile:=AnsiUpperCase(f5opd1.Files[i]);
+         flag:=True;
+         for j:=0 to ListBox1.items.Count-1 do
+         begin
+            if ansiUpperCase(ListBox1.items[j])=currFile
+                   then flag:=false;
+         end;
+         if flag then ListBox1.Items.add(f5opd1.Files[i]);
+      end;
+   end;
+end;
+
+procedure TForm5.Button2Click(Sender: TObject);
+
+var i,j,px,py,x,y,B,G,R:integer;
+
+    BW:byte;
+    pbit1:pbytearray;
+
+
+begin
+
+   a:=0;
+   AssignFile(FileN,ExtractFilePath(f5opd1.Files[0])+'image_F.txt');//FileNというテキストファイル型にディレクトリとファイル名を与える．
+
+   Rewrite(FileN); //FileNを作成して開く
+
+for i := 0 to Listbox1.items.count - 1 do begin
+
+   Form5.Image1.Picture.LoadFromFile(listbox1.items[i]);
+
+   Px:=0;
+   py:=0;
+   count:=0;
+
+   for y := 0 to image1.picture.height - 1 do  begin
+     for x := 0 to image1.picture.Width - 1 do  begin
+
+     pbit1:=image1.picture.bitmap.scanline[y] ;
+
+     B:=pbit1[3*x] ;
+     G:=pbit1[3*x+1];
+     R:=pbit1[3*x+2] ;
+
+     BW:=byte(round((B+G+R)/3));
+
+     if BW=0 then begin
+
+     px:=px+x;
+     py:=py+y;
+     count:=count+1;
+
+
+
+
+     end;
+
+
+
+     end;
+
+   end;
+
+  //if count=0 then begin
+
+  Gx:=round(px/(count));  //目的画像の重心
+  Gy:=round(py/(count));
+
+  
+
+
+
+  Writeln(FileN, 'Area                 :  ',count);                            //FileNに記入．
+  Writeln(FileN, 'COG                  :  ',Floattostr(Gx),' ',Floattostr(Gy));
+
+
+
+
+
+
+  form6:=tform6.create(self);
+  Form6.visible:=true;
+  //Form6.Image1.picture:=Form5.Image1.Picture;
+  end;
+
+
+
+
+
+  CloseFile(FileN);  //FileNを閉じる．
+
+end;
+
+end.
